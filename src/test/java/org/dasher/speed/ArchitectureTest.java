@@ -15,8 +15,6 @@ class ArchitectureTest {
 
     static final String BASE_PACKAGE = "org.dasher.speed";
 
-    // TODO Add your own rules and remove those that don't apply to your project
-
     @ArchTest
     public static final ArchRule domain_model_should_not_depend_on_application_services = noClasses().that()
             .resideInAPackage(BASE_PACKAGE + "..domain..").should().dependOnClassesThat()
