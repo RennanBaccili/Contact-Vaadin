@@ -1,6 +1,9 @@
 package org.dasher.speed.base.ui.view;
 import java.util.Collections;
 
+import org.dasher.speed.base.domain.Contact;
+import org.dasher.speed.taskmanagement.services.CrmService;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -10,21 +13,21 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
-import io.swagger.v3.oas.models.info.Contact;
-
 @Route(value = "Users")
 public class ListContactsView extends VerticalLayout {
     Grid<Contact> grid = new Grid<>(Contact.class);
     TextField filterText = new TextField();
     ContactForm contactForm;
+    private final CrmService crmService;
 
-    ListContactsView() {
+    ListContactsView(CrmService crmService) {
+        this.crmService = crmService;
         addClassName("list-view");
         setSizeFull();
 
         configureForm();
         configureGrid();
-
+        loadContacts();
         add(
             getToolbar(),
             getContent()
@@ -32,9 +35,12 @@ public class ListContactsView extends VerticalLayout {
     }  
         private Component getContent() {
             var content = new HorizontalLayout(grid, contactForm);
-            content.setFlexGrow(2, grid);
+            content.setFlexGrow(4, grid);
             content.setFlexGrow(1, contactForm);
             content.addClassName("content");
+            content.setWidth("100%");
+            grid.setHeight("600px");
+            grid.setWidth("100%");
             return content;
         }
             
@@ -60,9 +66,12 @@ public class ListContactsView extends VerticalLayout {
         grid.addClassName("contact-grid");
         grid.setSizeFull();
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
-        grid.setColumns("name", "email", "url");
     }
 
+    private void loadContacts(){
+        var contacts = crmService.getAllContacts();
+        grid.setItems(contacts);
+    }
             /**
      * Navigates to the main view.
      */
