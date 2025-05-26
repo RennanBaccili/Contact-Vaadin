@@ -1,10 +1,13 @@
 package org.dasher.speed.base.domain;
 
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Person")
@@ -13,9 +16,18 @@ public class Contact { // Parameterized with Long
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Isso agora está OK
+    
+    @NotNull
     private String firstName;
+
+    @NotNull
     private String lastName;
+
+    @NotEmpty
+    @Email
     private String email;
+
+    @NotNull
     private RoleEnum roleEnum;
 
     public Contact(String firstName, String lastName, String email, RoleEnum roleEnum) {
@@ -28,7 +40,7 @@ public class Contact { // Parameterized with Long
     public Contact() {
         super();
     }
-    
+
     // Getters e Setters
     public Long getId() {
         return id;

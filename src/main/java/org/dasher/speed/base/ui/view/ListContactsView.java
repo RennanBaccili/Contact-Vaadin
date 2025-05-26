@@ -1,5 +1,4 @@
 package org.dasher.speed.base.ui.view;
-import java.util.Collections;
 
 import org.dasher.speed.base.domain.Contact;
 import org.dasher.speed.taskmanagement.services.CrmService;
@@ -27,33 +26,41 @@ public class ListContactsView extends VerticalLayout {
 
         configureForm();
         configureGrid();
-        loadContacts();
+    
         add(
             getToolbar(),
             getContent()
         );
+
+        updateList();
     }  
-        private Component getContent() {
-            var content = new HorizontalLayout(grid, contactForm);
-            content.setFlexGrow(4, grid);
-            content.setFlexGrow(1, contactForm);
-            content.addClassName("content");
-            content.setWidth("100%");
-            grid.setHeight("600px");
-            grid.setWidth("100%");
-            return content;
-        }
+    private Component getContent() {
+        var content = new HorizontalLayout(grid, contactForm);
+        content.setFlexGrow(4, grid);
+        content.setFlexGrow(1, contactForm);
+        content.addClassName("content");
+        content.setWidth("100%");
+        grid.setHeight("600px");
+        grid.setWidth("100%");
+        return content;
+    }
             
-        private void configureForm() {
-        contactForm = new ContactForm(Collections.emptyList());
-        contactForm.setWidth("25em");
-        }   
+    private void configureForm() {
+        contactForm = new ContactForm(crmService);
         
-        private Component getToolbar() {
+        // Adicionando listener para contatos
+        contactForm.addContactListener(contact -> {
+            updateList(); // Atualiza a lista após salvar ou deletar
+        });
+    
+        contactForm.setWidth("25em");
+    }
+        
+    private Component getToolbar() {
         filterText.setPlaceholder("Filter by name...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
-
+        filterText.addValueChangeListener(e -> updateList());
         var addContactButton = new Button("Add contact");
 
         var toolbar = new HorizontalLayout(filterText, addContactButton);
@@ -66,15 +73,15 @@ public class ListContactsView extends VerticalLayout {
         grid.addClassName("contact-grid");
         grid.setSizeFull();
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+        grid.asSingleSelect().addValueChangeListener(event -> {
+            Contact selectedContact = event.getValue();
+            if (selectedContact != null) {
+                contactForm.setContact(selectedContact); // Preencher o formulário com o contato selecionado
+            }
+        });
     }
 
-    private void loadContacts(){
-        var contacts = crmService.getAllContacts();
-        grid.setItems(contacts);
-    }
-            /**
-     * Navigates to the main view.
-     */
-    public static void showMainView() {
+    private void updateList() {
+        grid.setItems(crmService.searchContacts(filterText.getValue())); // Atualiza a grid com todos os contatos
     }
 }

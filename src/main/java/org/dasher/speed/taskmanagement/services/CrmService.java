@@ -14,8 +14,12 @@ public class CrmService {
     @Autowired
     private ContactRepository contactRepository;
 
-    public Contact createContact(Contact contact) {
-        return contactRepository.save(contact);
+    public Contact saveContact(Contact contact) {
+        if(contact == null){
+            System.err.println("Contact is null");
+            return contact;
+        }
+        return contactRepository.save(contact);  
     }
 
     public List<Contact> getAllContacts() {
@@ -39,6 +43,14 @@ public class CrmService {
     }
 
     public List<Contact> searchContacts(String searchTerm) {
-        return contactRepository.search(searchTerm);
+        if(searchTerm == null || searchTerm.isEmpty()){
+            getAllContacts();
+        }{
+            return contactRepository.search(searchTerm);
+        }
+    }
+
+    public long countContacts(){
+        return contactRepository.count();
     }
 }
