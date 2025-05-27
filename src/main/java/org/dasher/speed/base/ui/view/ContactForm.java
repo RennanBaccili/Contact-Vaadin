@@ -51,6 +51,7 @@ public class ContactForm extends FormLayout {
     public void setContact(Contact contact){
         binder.readBean(contact);
         this.currentContact = contact;
+        Notification.show("Contato atual: " + (contact != null ? contact.getId() : "Nenhum contato")); // Debug
     }
 
     private HorizontalLayout createButtonsLayout() {
