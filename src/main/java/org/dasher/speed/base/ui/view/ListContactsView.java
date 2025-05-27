@@ -1,11 +1,7 @@
 package org.dasher.speed.base.ui.view;
 
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.theme.lumo.LumoUtility;
-import com.vaadin.flow.component.html.H2;
 import org.dasher.speed.base.domain.Contact;
+import org.dasher.speed.base.ui.component.ContactForm;
 import org.dasher.speed.taskmanagement.services.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
